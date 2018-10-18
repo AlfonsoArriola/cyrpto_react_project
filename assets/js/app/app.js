@@ -14,15 +14,17 @@ class Layout extends Component {
       location: 'home',
       date: moment(),
       data: '',
-      cryptoAmount: 1
+      cryptoAmount: 1,
+      status: '',
+      totalStatus: ''
     }
 
       this.routingSystem = 
       this.routingSystem.bind(this)
       this.handleDateChange = 
       this.handleDateChange.bind(this)
-      this.apiCall = 
-      this.apiCall.bind(this)
+      this.checkProfits = 
+      this.checkProfits.bind(this)
       this.onInputChange = 
       this.onInputChange.bind(this)
   }
@@ -47,12 +49,21 @@ class Layout extends Component {
 routingSystem(){
   switch(this.state.location) {
       case 'home':
-          return <Home handleDateChange={this.handleDateChange} globalState={this.state} onInputChange={this.onInputChange}/>
+          return <Home 
+          handleDateChange={this.handleDateChange}
+          globalState={this.state} 
+          onInputChange={this.onInputChange}
+          checkProfits={this.checkProfits}/>
           break;
+
       case 'results':
+
           return <Results />
+
           break;
+
       default:
+
           return <Home />
   }
 }
@@ -69,11 +80,11 @@ routingSystem(){
        })
   }
   
-  apiCall(){
+  checkProfits(){
     //https://min-api.cryptocompare.com/data/pricehistorical?fsym=BTC&tsyms=BTC,USD,EUR&ts=1535562213&extraParams=crypto_profits_aa
       var self = this;
 
-      axios.get('https://min-api.cryptocompare.com/data/pricehistorical?fsym=BTC&tsyms=BTC,USD,EUR&ts=1535562213&extraParams=crypto_profits_aa')
+      axios.get(`https://min-api.cryptocompare.com/data/pricehistorical?fsym=BTC&tsyms=BTC,USD,EUR&ts=${self.state.date.unix()}&extraParams=crypto_profits_aa`)
                 .then(function (response) {
                   
                   self.setState({
@@ -81,17 +92,6 @@ routingSystem(){
                   }, () => {
 
                      console.log(self.state);
-
-                            // COST PRICE = 108.78
-                            // SELLNG PRICE = 16467.91
-                            // GAIN = SP - CP 
-                            // 16467.91 - 108.78 = 16359.13
-                            // GAINS = (GAIN/CP) * 100
-                            // (16359.13/108.78) * 100 = 15038.729545872403015
-                            // LOSS = CP - SP
-                            // 108.78 - 16467.91 = 16359.13
-                            // LOSS% = (LOSS/CP)
-                            // (-16359.13/100.78) * 100 = 15038.729545872403015
                             const CP =  self.state.data.USD
                             var newCP = (self.state.cryptoAmount * 100)
                             newCP = (newCP * CP)/100
@@ -103,13 +103,47 @@ routingSystem(){
                                  var gain = newSP - newCP
                                  var gainPercent = (gain/newCP) * 100
                                  gainPercent = gainPercent.toFixed(2)
+                                 console.log(`${self.state.cryptoAmount} bitcoin new SP: ${newSP}, SP:${SP}, NewCP:${newCP}, CP:${CP}`)
+
+
                                  console.log(`profit percent is ${gainPercent}`)
+                               //set state with totals and change locations
+                                self.setState({
+                                location:'results',
+                                status: 'gain',
+                                totalStatus: {
+                                  newCP: newCP,
+                                  CP: CP,
+                                  newSP: SP,
+                                  SP: SP,
+                                  gainPercent: gainPercent
+
+                                }
+                              }, ()=> console.log(self.state))
+
                               } else {
                                  var loss = newCP - newSP
                                  var lossPercent = (loss/newCP) * 100
                                   lossPercent = lossPercent.toFixed(2)
+                                  console.log(`${self.state.cryptoAmount} bitcoin new SP: ${newSP}, SP:${SP}, NewCP:${newCP}, CP:${CP}`)
                                    console.log(`loss percent is ${lossPercent}`)
+                                 //set state with totals and change locations
+                                      self.setState({
+                                location:'results',
+                                status: 'loss',
+                                totalStatus: {
+                                  newCP: newCP,
+                                  CP: CP,
+                                  newSP: SP,
+                                  SP: SP,
+                                  lossPercent: lossPercent
+
+                                }
+                              }, ()=> console.log(self.state))
+
                               }
+
+                            
 
                   })
                 })
@@ -123,7 +157,7 @@ routingSystem(){
    
           <div className='container'>
                <header>
-                 <div className='logo' onClick={this.apiCall}>
+                 <div className='logo' onClick={this.checkProfits}>
                    Crypto Profits
                  </div>
                    

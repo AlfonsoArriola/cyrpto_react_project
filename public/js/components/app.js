@@ -95,7 +95,7 @@ var Home = function (_Component) {
             }),
             _react2.default.createElement(
               'button',
-              { type: 'submit' },
+              { type: 'submit', onClick: this.props.checkProfits },
               ' Check Profits '
             )
           )
@@ -269,12 +269,14 @@ var Layout = function (_Component) {
       location: 'home',
       date: (0, _moment2.default)(),
       data: '',
-      cryptoAmount: 1
+      cryptoAmount: 1,
+      status: '',
+      totalStatus: ''
     };
 
     _this.routingSystem = _this.routingSystem.bind(_this);
     _this.handleDateChange = _this.handleDateChange.bind(_this);
-    _this.apiCall = _this.apiCall.bind(_this);
+    _this.checkProfits = _this.checkProfits.bind(_this);
     _this.onInputChange = _this.onInputChange.bind(_this);
     return _this;
   }
@@ -299,12 +301,21 @@ var Layout = function (_Component) {
     value: function routingSystem() {
       switch (this.state.location) {
         case 'home':
-          return _react2.default.createElement(_Home2.default, { handleDateChange: this.handleDateChange, globalState: this.state, onInputChange: this.onInputChange });
+          return _react2.default.createElement(_Home2.default, {
+            handleDateChange: this.handleDateChange,
+            globalState: this.state,
+            onInputChange: this.onInputChange,
+            checkProfits: this.checkProfits });
           break;
+
         case 'results':
+
           return _react2.default.createElement(_Results2.default, null);
+
           break;
+
         default:
+
           return _react2.default.createElement(_Home2.default, null);
       }
     }
@@ -327,29 +338,18 @@ var Layout = function (_Component) {
       });
     }
   }, {
-    key: 'apiCall',
-    value: function apiCall() {
+    key: 'checkProfits',
+    value: function checkProfits() {
       //https://min-api.cryptocompare.com/data/pricehistorical?fsym=BTC&tsyms=BTC,USD,EUR&ts=1535562213&extraParams=crypto_profits_aa
       var self = this;
 
-      _axios2.default.get('https://min-api.cryptocompare.com/data/pricehistorical?fsym=BTC&tsyms=BTC,USD,EUR&ts=1535562213&extraParams=crypto_profits_aa').then(function (response) {
+      _axios2.default.get('https://min-api.cryptocompare.com/data/pricehistorical?fsym=BTC&tsyms=BTC,USD,EUR&ts=' + self.state.date.unix() + '&extraParams=crypto_profits_aa').then(function (response) {
 
         self.setState({
           data: response.data.BTC
         }, function () {
 
           console.log(self.state);
-
-          // COST PRICE = 108.78
-          // SELLNG PRICE = 16467.91
-          // GAIN = SP - CP 
-          // 16467.91 - 108.78 = 16359.13
-          // GAINS = (GAIN/CP) * 100
-          // (16359.13/108.78) * 100 = 15038.729545872403015
-          // LOSS = CP - SP
-          // 108.78 - 16467.91 = 16359.13
-          // LOSS% = (LOSS/CP)
-          // (-16359.13/100.78) * 100 = 15038.729545872403015
           var CP = self.state.data.USD;
           var newCP = self.state.cryptoAmount * 100;
           newCP = newCP * CP / 100;
@@ -361,12 +361,45 @@ var Layout = function (_Component) {
             var gain = newSP - newCP;
             var gainPercent = gain / newCP * 100;
             gainPercent = gainPercent.toFixed(2);
+            console.log(self.state.cryptoAmount + ' bitcoin new SP: ' + newSP + ', SP:' + SP + ', NewCP:' + newCP + ', CP:' + CP);
+
             console.log('profit percent is ' + gainPercent);
+            //set state with totals and change locations
+            self.setState({
+              location: 'results',
+              status: 'gain',
+              totalStatus: {
+                newCP: newCP,
+                CP: CP,
+                newSP: SP,
+                SP: SP,
+                gainPercent: gainPercent
+
+              }
+            }, function () {
+              return console.log(self.state);
+            });
           } else {
             var loss = newCP - newSP;
             var lossPercent = loss / newCP * 100;
             lossPercent = lossPercent.toFixed(2);
+            console.log(self.state.cryptoAmount + ' bitcoin new SP: ' + newSP + ', SP:' + SP + ', NewCP:' + newCP + ', CP:' + CP);
             console.log('loss percent is ' + lossPercent);
+            //set state with totals and change locations
+            self.setState({
+              location: 'results',
+              status: 'loss',
+              totalStatus: {
+                newCP: newCP,
+                CP: CP,
+                newSP: SP,
+                SP: SP,
+                lossPercent: lossPercent
+
+              }
+            }, function () {
+              return console.log(self.state);
+            });
           }
         });
       }).catch(function (error) {
@@ -387,7 +420,7 @@ var Layout = function (_Component) {
             null,
             _react2.default.createElement(
               'div',
-              { className: 'logo', onClick: this.apiCall },
+              { className: 'logo', onClick: this.checkProfits },
               'Crypto Profits'
             ),
             _react2.default.createElement(
