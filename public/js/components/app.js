@@ -310,7 +310,7 @@ var Layout = function (_Component) {
 
         case 'results':
 
-          return _react2.default.createElement(_Results2.default, null);
+          return _react2.default.createElement(_Results2.default, { globalState: this.state });
 
           break;
 

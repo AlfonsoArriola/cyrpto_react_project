@@ -58,7 +58,7 @@ routingSystem(){
 
       case 'results':
 
-          return <Results />
+          return <Results globalState={this.state}/>
 
           break;
 
