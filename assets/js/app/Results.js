@@ -7,10 +7,22 @@ export default class Home extends Component {
     this.state = {
       name: 'Joe'
     }
+
+    this.checkGains = this.checkGains.bind(this)
   }
-  clickedBtn = () => {
-    console.log('swag')
+  
+
+  checkGains(){
+
+    const {percent} = this.props.globalState.totalStatus
+
+    if(this.props.globalState.status == 'gain'){
+      return `You made {percent}% profit`
+    } else{
+      return `Your loss {percent}% of your initial investment`
+    }
   }
+
   render () {
      
      const{percent, newCP,newSP} = this.props.globalState.totalStatus
@@ -27,7 +39,7 @@ export default class Home extends Component {
                  <div className="col-md-12">
                      <h3> Your ${newCP} dollar investment is now </h3> 
                      <h1> ${newSP}</h1>
-                     <h4> You made {percent}% profit </h4>
+                   <h4> {this.checkGains()}</h4>
 
                       <a href="#" className="main-btn" >
                             Create account to keep track of all your Bit Coin profits

@@ -147,17 +147,27 @@ var Home = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this));
 
-    _this.clickedBtn = function () {
-      console.log('swag');
-    };
-
     _this.state = {
       name: 'Joe'
     };
+
+    _this.checkGains = _this.checkGains.bind(_this);
     return _this;
   }
 
   _createClass(Home, [{
+    key: 'checkGains',
+    value: function checkGains() {
+      var percent = this.props.globalState.totalStatus.percent;
+
+
+      if (this.props.globalState.status == 'gain') {
+        return 'You made {percent}% profit';
+      } else {
+        return 'Your loss {percent}% of your initial investment';
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _props$globalState$to = this.props.globalState.totalStatus,
@@ -196,9 +206,8 @@ var Home = function (_Component) {
             _react2.default.createElement(
               'h4',
               null,
-              ' You made ',
-              percent,
-              '% profit '
+              ' ',
+              this.checkGains()
             ),
             _react2.default.createElement(
               'a',
