@@ -160,6 +160,12 @@ var Home = function (_Component) {
   _createClass(Home, [{
     key: 'render',
     value: function render() {
+      var _props$globalState$to = this.props.globalState.totalStatus,
+          percent = _props$globalState$to.percent,
+          newCP = _props$globalState$to.newCP,
+          newSP = _props$globalState$to.newSP;
+
+
       return _react2.default.createElement(
         'section',
         { id: 'results' },
@@ -177,17 +183,22 @@ var Home = function (_Component) {
             _react2.default.createElement(
               'h3',
               null,
-              ' Your $1,200 dollar investment is now '
+              ' Your $',
+              newCP,
+              ' dollar investment is now '
             ),
             _react2.default.createElement(
               'h1',
               null,
-              ' $7300'
+              ' $',
+              newSP
             ),
             _react2.default.createElement(
               'h4',
               null,
-              ' You made $400% profit '
+              ' You made ',
+              percent,
+              '% profit '
             ),
             _react2.default.createElement(
               'a',
@@ -373,7 +384,7 @@ var Layout = function (_Component) {
                 CP: CP,
                 newSP: SP,
                 SP: SP,
-                gainPercent: gainPercent
+                percent: gainPercent
 
               }
             }, function () {
@@ -394,7 +405,7 @@ var Layout = function (_Component) {
                 CP: CP,
                 newSP: SP,
                 SP: SP,
-                lossPercent: lossPercent
+                percent: lossPercent
 
               }
             }, function () {

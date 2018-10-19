@@ -12,6 +12,9 @@ export default class Home extends Component {
     console.log('swag')
   }
   render () {
+     
+     const{percent, newCP,newSP} = this.props.globalState.totalStatus
+
     return (<section id='results'>
    
           <div className='container'>
@@ -22,9 +25,9 @@ export default class Home extends Component {
             </div>
 
                  <div className="col-md-12">
-                     <h3> Your $1,200 dollar investment is now </h3> 
-                     <h1> $7300</h1>
-                     <h4> You made $400% profit </h4>
+                     <h3> Your ${newCP} dollar investment is now </h3> 
+                     <h1> ${newSP}</h1>
+                     <h4> You made {percent}% profit </h4>
 
                       <a href="#" className="main-btn" >
                             Create account to keep track of all your Bit Coin profits

@@ -116,7 +116,7 @@ routingSystem(){
                                   CP: CP,
                                   newSP: SP,
                                   SP: SP,
-                                  gainPercent: gainPercent
+                                  percent: gainPercent
 
                                 }
                               }, ()=> console.log(self.state))
@@ -136,7 +136,7 @@ routingSystem(){
                                   CP: CP,
                                   newSP: SP,
                                   SP: SP,
-                                  lossPercent: lossPercent
+                                  percent: lossPercent
 
                                 }
                               }, ()=> console.log(self.state))
