@@ -27,6 +27,8 @@ class Layout extends Component {
       this.checkProfits.bind(this)
       this.onInputChange = 
       this.onInputChange.bind(this)
+      this.goBack =
+      this.goBack.bind(this)
   }
 
   componentWillMount() {
@@ -58,7 +60,8 @@ routingSystem(){
 
       case 'results':
 
-          return <Results globalState={this.state}/>
+          return <Results globalState={this.state}
+          goBack = {this.goBack} />
 
           break;
 
@@ -150,6 +153,17 @@ routingSystem(){
                 .catch(function (error) {
                   console.log(error);
                 });
+  }
+
+  goBack(){
+     this.setState({
+      location: 'home',
+      date: moment(),
+      data: '',
+      cryptoAmount: 1,
+      status: '',
+      totalStatus: ''
+     })
   }
 
   render () {

@@ -11,7 +11,6 @@ export default class Home extends Component {
     this.checkGains = this.checkGains.bind(this)
   }
   
-
   checkGains(){
 
     const {percent} = this.props.globalState.totalStatus
@@ -38,11 +37,15 @@ export default class Home extends Component {
 
                  <div className="col-md-12">
                      <h3> Your ${newCP} dollar investment is now </h3> 
-                     <h1> ${newSP}</h1>
-                   <h4> {this.checkGains()}</h4>
+                     <h1> ${newSP} </h1>
+                     <h4> {this.checkGains()} </h4>
 
-                      <a href="#" className="main-btn" >
+                     <a href="#" className="main-btn active" >
                             Create account to keep track of all your Bit Coin profits
+                      </a>
+
+                      <a href="#" className="main-btn" onClick={this.props.goBack}>
+                            Check another transaction.
                       </a>
                   </div>
 

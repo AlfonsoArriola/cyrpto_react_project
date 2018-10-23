@@ -201,18 +201,25 @@ var Home = function (_Component) {
               'h1',
               null,
               ' $',
-              newSP
+              newSP,
+              ' '
             ),
             _react2.default.createElement(
               'h4',
               null,
               ' ',
-              this.checkGains()
+              this.checkGains(),
+              ' '
             ),
             _react2.default.createElement(
               'a',
-              { href: '#', className: 'main-btn' },
+              { href: '#', className: 'main-btn active' },
               'Create account to keep track of all your Bit Coin profits'
+            ),
+            _react2.default.createElement(
+              'a',
+              { href: '#', className: 'main-btn', onClick: this.props.goBack },
+              'Check another transaction.'
             )
           ),
           _react2.default.createElement(
@@ -298,6 +305,7 @@ var Layout = function (_Component) {
     _this.handleDateChange = _this.handleDateChange.bind(_this);
     _this.checkProfits = _this.checkProfits.bind(_this);
     _this.onInputChange = _this.onInputChange.bind(_this);
+    _this.goBack = _this.goBack.bind(_this);
     return _this;
   }
 
@@ -330,7 +338,8 @@ var Layout = function (_Component) {
 
         case 'results':
 
-          return _react2.default.createElement(_Results2.default, { globalState: this.state });
+          return _react2.default.createElement(_Results2.default, { globalState: this.state,
+            goBack: this.goBack });
 
           break;
 
@@ -424,6 +433,18 @@ var Layout = function (_Component) {
         });
       }).catch(function (error) {
         console.log(error);
+      });
+    }
+  }, {
+    key: 'goBack',
+    value: function goBack() {
+      this.setState({
+        location: 'home',
+        date: (0, _moment2.default)(),
+        data: '',
+        cryptoAmount: 1,
+        status: '',
+        totalStatus: ''
       });
     }
   }, {
